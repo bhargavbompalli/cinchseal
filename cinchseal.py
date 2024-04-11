@@ -23,7 +23,7 @@ class CinchSeal:
     def check_potting(self):
         #THIS SHOULD INCLUDE ALERT FOR POTTING LOGIC
     
-    def calculate_poses_for_circle(diameter, starting_position): # This function is used to calculate the poses for the circle
+    def calculate_poses_for_circle(self, diameter, starting_position): # This function is used to calculate the poses for the circle
         radius = diameter / 2
         print("radius: ", radius)
 
@@ -39,12 +39,12 @@ class CinchSeal:
 
         return pose1, pose2
 
-    def move_circle_with_diameter(diameter, starting_position): # This function is used to move the robot in a circle
+    def move_circle_with_diameter(self, diameter, starting_position): # This function is used to move the robot in a circle
         # Calculate poses based on diameter
         pose1, pose2 = calculate_poses_for_circle(diameter, starting_position)
 
         print("Moving circle with diameter: ", diameter)
-        arm.move_circle(pose1=pose1, pose2=pose2, percent=100, speed=100, mvacc=100, wait=True)
+        self.arm.move_circle(pose1=pose1, pose2=pose2, percent=100, speed=100, mvacc=100, wait=True)
         print("Circle moved")
 
 # Start of the functions for the pins
@@ -130,4 +130,4 @@ class CinchSeal:
         self.move_circle_with_diameter(100, [339.8, 418.8, 442.3, 180, 0, 0])
 
     def back_to_zero(self):
-        #THIS SHOULD INCLUDE GOING BACK MOVEMENT
+        pass # THIS SHOULD INCLUDE GOING BACK MOVEMENT
