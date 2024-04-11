@@ -597,4 +597,3 @@ if __name__ == '__main__':
     arm = XArmAPI('192.168.1.213', baud_checkset=False)
     robot_main = RobotMain(arm)
     robot_main.run()
-+

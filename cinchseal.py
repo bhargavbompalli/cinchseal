@@ -20,8 +20,14 @@ class CinchSeal:
     def custom_zero(self):
         self.arm.set_position(x=136.0, y=215.3, z=620.8, roll=180, pitch=0, yaw=0, speed=speed, mvacc=tcp_acc, is_radian=False, wait=False)
     
-    def check_potting(self):
-        #THIS SHOULD INCLUDE ALERT FOR POTTING LOGIC
+    def check_potting(self): #### ASK ABOUT THIS ####       
+        while self.arm.get_cgpio_digital(1)[0]:
+            self.arm.set_cgpio_digital(8, 1, delay_sec=0)
+            time.sleep(0.5)
+            self.arm.set_cgpio_digital(8, 0, delay_sec=0)
+            time.sleep(0.5)
+        else:
+            self.arm.set_cgpio_digital(8, 1, delay_sec=0)
     
     def calculate_poses_for_circle(self, diameter, starting_position): # This function is used to calculate the poses for the circle
         radius = diameter / 2
@@ -130,4 +136,74 @@ class CinchSeal:
         self.move_circle_with_diameter(100, [339.8, 418.8, 442.3, 180, 0, 0])
 
     def back_to_zero(self):
-        pass # THIS SHOULD INCLUDE GOING BACK MOVEMENT
+        while not self.arm.get_cgpio_digital(2)[1]:
+            t1 = time.monotonic()
+
+            self.arm.set_cgpio_digital(8, 1, delay_sec=0)
+            time.sleep(0.5)
+
+            self.arm.set_cgpio_digital(8, 0, delay_sec=0)
+            time.sleep(0.1)
+
+            self.arm.set_cgpio_digital(8, 1, delay_sec=0)
+            time.sleep(0.5)
+
+            self.arm.set_cgpio_digital(8, 0, delay_sec=0)
+            time.sleep(0.1)
+
+            interval = time.monotonic() - t1
+            if interval < 0.01:
+                time.sleep(0.01 - interval)
+
+        _, current_angle = self.arm.get_servo_angle()
+        new_angle = current_angle.copy()
+
+        for i in range(-100, 100, 1): #### ASK ABOUT THIS ####
+            new_angle[0] = i
+            self.arm.set_servo_angle(new_angle, speed=speed, mvacc=tcp_acc, wait=True)
+    
+    def run(self):
+        self.arm.set_cgpio_digital(8, 0, delay_sec=0)
+
+        self.custom_zero()
+
+        while self.arm.get_cgpio_digital(0)[1]:
+            self.arm.set_cgpio_digital(8, 1, delay_sec=0)
+
+            self.check_potting()
+            self.pin1()
+            self.check_potting()
+            self.pin2()
+            self.check_potting()
+            self.pin3()
+            self.check_potting()
+            self.pin4()
+            self.check_potting()
+            self.pin5()
+            self.check_potting()
+            self.pin6()
+            self.check_potting()
+            self.pin7()
+            self.check_potting()
+            self.pin8()
+            self.check_potting()
+            self.pin9()
+            self.check_potting()
+            self.pin10()
+            self.check_potting()
+            self.pin11()
+            self.check_potting()
+            self.pin12()
+            self.check_potting()
+            self.pin13()
+            self.check_potting()
+            self.pin14()
+            self.check_potting()
+            self.pin15()
+            self.check_potting()
+            self.pin16()
+
+            self.back_to_zero()
+            break
+        
+        self.arm.set_cgpio_digital(8, 0, delay_sec=0)
