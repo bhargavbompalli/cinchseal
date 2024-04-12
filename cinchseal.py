@@ -7,6 +7,7 @@ ip = "192.168.1.213" # Please change to the IP of your robot
 
 speed = 100 # Please change speed of the robot, in mm/s
 tcp_acc = 2000 # Please change the TCP acceleration of the robot, in mm/s^2
+diameter = 100 # Please change the diameter of the circle, in mm
 
 class CinchSeal:
     def __init__(self, ip):
@@ -20,8 +21,8 @@ class CinchSeal:
     def custom_zero(self):
         self.arm.set_position(x=136.0, y=215.3, z=620.8, roll=180, pitch=0, yaw=0, speed=speed, mvacc=tcp_acc, is_radian=False, wait=False)
     
-    def check_potting(self): #### ASK ABOUT THIS, WHAT IS "get CI1" DOING ####       
-        while self.arm.get_cgpio_digital(1)[1]:
+    def check_potting(self): # When sensor gets 0 value, it will flash the light      
+        while self.arm.get_cgpio_digital(1)[1] == 0:
             self.arm.set_cgpio_digital(8, 1, delay_sec=0)
             time.sleep(0.5)
             self.arm.set_cgpio_digital(8, 0, delay_sec=0)
@@ -158,7 +159,7 @@ class CinchSeal:
         _, current_angle = self.arm.get_servo_angle()
         new_angle = current_angle.copy()
 
-        for i in range(-100, 100, 1): #### ASK ABOUT THIS ####
+        for i in range(-100, 100, 1): #Move joint 1 to the same position every time, even if it does not do 16 at once.
             new_angle[0] = i
             self.arm.set_servo_angle(new_angle, speed=speed, mvacc=tcp_acc, wait=True)
     
@@ -167,10 +168,10 @@ class CinchSeal:
 
         self.custom_zero()
 
-        while self.arm.get_cgpio_digital(0)[1]:
+        while self.arm.get_cgpio_digital(0)[1]: #Button, when pressed, changes the value. But when let go will switch back to 0
             self.arm.set_cgpio_digital(8, 1, delay_sec=0)
 
-            self.check_potting()
+            self.check_potting() #Check potting is constantly happening. While the sensor is 0, run the code (the pins)
             self.pin1()
             self.check_potting()
             self.pin2()
@@ -203,7 +204,7 @@ class CinchSeal:
             self.check_potting()
             self.pin16()
 
-            self.back_to_zero()
+            self.back_to_zero() #This is a reset button which is separate.
             break
         
         self.arm.set_cgpio_digital(8, 0, delay_sec=0)
