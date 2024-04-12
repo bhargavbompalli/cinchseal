@@ -21,7 +21,7 @@ class CinchSeal:
         self.arm.set_position(x=136.0, y=215.3, z=620.8, roll=180, pitch=0, yaw=0, speed=speed, mvacc=tcp_acc, is_radian=False, wait=False)
     
     def check_potting(self): #### ASK ABOUT THIS ####       
-        while self.arm.get_cgpio_digital(1)[0]:
+        while self.arm.get_cgpio_digital(1)[1]:
             self.arm.set_cgpio_digital(8, 1, delay_sec=0)
             time.sleep(0.5)
             self.arm.set_cgpio_digital(8, 0, delay_sec=0)
@@ -47,7 +47,7 @@ class CinchSeal:
 
     def move_circle_with_diameter(self, diameter, starting_position): # This function is used to move the robot in a circle
         # Calculate poses based on diameter
-        pose1, pose2 = calculate_poses_for_circle(diameter, starting_position)
+        pose1, pose2 = self.calculate_poses_for_circle(diameter, starting_position)
 
         print("Moving circle with diameter: ", diameter)
         self.arm.move_circle(pose1=pose1, pose2=pose2, percent=100, speed=100, mvacc=100, wait=True)
