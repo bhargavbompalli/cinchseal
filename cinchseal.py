@@ -20,7 +20,7 @@ class CinchSeal:
     def custom_zero(self):
         self.arm.set_position(x=136.0, y=215.3, z=620.8, roll=180, pitch=0, yaw=0, speed=speed, mvacc=tcp_acc, is_radian=False, wait=False)
     
-    def check_potting(self): #### ASK ABOUT THIS ####       
+    def check_potting(self): #### ASK ABOUT THIS, WHAT IS "get CI1" DOING ####       
         while self.arm.get_cgpio_digital(1)[1]:
             self.arm.set_cgpio_digital(8, 1, delay_sec=0)
             time.sleep(0.5)
