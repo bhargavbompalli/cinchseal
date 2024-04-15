@@ -6,7 +6,7 @@ import threading
 
 from xarm.wrapper import XArmAPI
 
-ip = "192.168.1.213"
+ip = "192.168.1.213" # Change this to the IP address of the robot
 
 arm = XArmAPI(ip)
 arm.motion_enable(enable=True)
