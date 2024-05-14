@@ -12,7 +12,6 @@ arm = XArmAPI(ip)
 arm.motion_enable(enable=True)
 arm.set_mode(0)
 arm.set_state(state=0)
-start = False
 
 speed = 200 # Adjust the speed of the robot, in mm/s
 diameter = 100 # Adjust the diameter of the circle, in mm
@@ -58,6 +57,7 @@ def move_circle_with_diameter(diameter, starting_position): # This function is u
 def move_arm_sequence():
     # Define a list of positions and coordinates for the circle for the arm to move through
     positions_and_circles = [
+        #((136, 215.3, 620.8, 180, 0, 0)), #FOR LINEAR MOVEMENT
         ((367.7, 245.3, 442.3, 180, 0, 0),(diameter, [367.7, 245.3, 442.3, 180, 0, 0])),
         ((339.9, 57.1, 442.3, 180, 0, 0),(diameter, [339.9, 57.1, 442.3, 180, 0, 0])),
         ((236.0, -83.9, 442.3, 180, 0, 0),(diameter, [236.0, -83.9, 442.3, 180, 0, 0])),
@@ -83,7 +83,7 @@ def move_arm_sequence():
             if sensor_state == 0:
                 time.sleep(0.1)
                 continue
-
+########### Reset button state check ############
             code, reset = arm.get_cgpio_digital(ionum=2) # Check the reset button state
             if reset == 1:
                 arm.set_cgpio_digital(8, 0, delay_sec=0) # Turn off the LED
@@ -93,7 +93,7 @@ def move_arm_sequence():
 
         arm.set_cgpio_digital(8, 1, delay_sec=0) # Turn on the LED
 
-        arm.set_position(*pos, speed=speed, is_radian=False, wait=True) # Move to the position
+        arm.set_position(*pos, speed=speed, is_radian=False, wait=True) # Move to the position in the first parenthesis
 
         move_circle_with_diameter(circle[0], circle[1]) # Move in a circle
     
